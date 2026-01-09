@@ -5,7 +5,7 @@
 set -e  # Exit on error
 
 ADDON_ID="plugin.video.jitsi"
-VERSION="1.0.1"
+VERSION="1.0.2"
 PACKAGE_NAME="${ADDON_ID}-${VERSION}.zip"
 
 echo "Creating Kodi addon package: ${PACKAGE_NAME}"

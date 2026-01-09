@@ -47,21 +47,35 @@ class JitsiClient:
         xbmc.log(f"[Jitsi Meet] Opening URL: {url}", xbmc.LOGINFO)
         
         dialog = xbmcgui.Dialog()
-        dialog.notification(
-            'Jitsi Meet',
-            f'Opening meeting in browser...',
-            xbmcgui.NOTIFICATION_INFO,
-            3000
-        )
-        
-        xbmc.executebuiltin(f'RunPlugin(plugin://plugin.program.chrome.launcher/?{url})')
+        browser_opened = False
         
         try:
             import webbrowser
             webbrowser.open(url)
+            browser_opened = True
+            xbmc.log("[Jitsi Meet] Successfully opened URL with webbrowser module", xbmc.LOGINFO)
         except Exception as e:
-            xbmc.log(f"[Jitsi Meet] Error opening browser: {str(e)}", xbmc.LOGERROR)
-            dialog.ok('Error', f'Could not open browser. Please visit:\n{url}')
+            xbmc.log(f"[Jitsi Meet] webbrowser module failed: {str(e)}", xbmc.LOGWARNING)
+        
+        if not browser_opened:
+            try:
+                import subprocess
+                subprocess.Popen(['xdg-open', url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                browser_opened = True
+                xbmc.log("[Jitsi Meet] Successfully opened URL with xdg-open", xbmc.LOGINFO)
+            except Exception as e:
+                xbmc.log(f"[Jitsi Meet] xdg-open failed: {str(e)}", xbmc.LOGWARNING)
+        
+        if browser_opened:
+            dialog.notification(
+                'Jitsi Meet',
+                'Opening meeting in browser...',
+                xbmcgui.NOTIFICATION_INFO,
+                3000
+            )
+        else:
+            xbmc.log("[Jitsi Meet] All browser opening methods failed, showing URL to user", xbmc.LOGERROR)
+            dialog.ok('Jitsi Meet', f'Please open this URL in a browser:\n\n{url}')
     
     def get_recent_rooms(self):
         if os.path.exists(RECENT_ROOMS_FILE):
