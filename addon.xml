@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.jitsi" name="Jitsi Meet" version="1.0.0" provider-name="Roman Plevka">
+<addon id="plugin.video.jitsi" name="Jitsi Meet" version="1.0.1" provider-name="Roman Plevka">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests" version="2.25.1"/>
@@ -14,7 +14,8 @@
         <license>MIT</license>
         <website>https://meet.jit.si</website>
         <source>https://github.com/rplevka/jitsi-kodi</source>
-        <news>v1.0.0 - Initial release</news>
+        <news>v1.0.1 - Fix xbmc.translatePath compatibility for Kodi 19+
+v1.0.0 - Initial release</news>
         <assets>
             <icon>resources/media/icon.png</icon>
             <fanart>resources/media/fanart.jpg</fanart>

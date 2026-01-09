@@ -1,11 +1,12 @@
 import xbmc
 import xbmcgui
 import xbmcaddon
+import xbmcvfs
 import json
 import os
 
 ADDON = xbmcaddon.Addon()
-ADDON_DATA_PATH = xbmc.translatePath(ADDON.getAddonInfo('profile'))
+ADDON_DATA_PATH = xbmcvfs.translatePath(ADDON.getAddonInfo('profile'))
 RECENT_ROOMS_FILE = os.path.join(ADDON_DATA_PATH, 'recent_rooms.json')
 
 class JitsiClient:

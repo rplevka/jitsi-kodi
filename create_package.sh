@@ -2,8 +2,10 @@
 
 # Script to create a Kodi addon package for Jitsi Meet
 
+set -e  # Exit on error
+
 ADDON_ID="plugin.video.jitsi"
-VERSION="1.0.0"
+VERSION="1.0.1"
 PACKAGE_NAME="${ADDON_ID}-${VERSION}.zip"
 
 echo "Creating Kodi addon package: ${PACKAGE_NAME}"
@@ -15,15 +17,37 @@ if [ ! -f "addon.xml" ]; then
     exit 1
 fi
 
+# Check if zip command is available
+if ! command -v zip &> /dev/null; then
+    echo "Error: 'zip' command not found."
+    echo ""
+    echo "Please install zip using one of these methods:"
+    echo "  - macOS: brew install zip"
+    echo "  - Ubuntu/Debian: sudo apt-get install zip"
+    echo "  - Fedora/RHEL: sudo dnf install zip"
+    echo ""
+    echo "Alternatively, manually create the package:"
+    echo "  1. Create a directory named '${ADDON_ID}'"
+    echo "  2. Copy addon.xml, addon.py, resources/, LICENSE, and README.md into it"
+    echo "  3. Compress it to ${PACKAGE_NAME}"
+    exit 1
+fi
+
 # Create a temporary directory for packaging
 TEMP_DIR=$(mktemp -d)
 ADDON_DIR="${TEMP_DIR}/${ADDON_ID}"
+
+# Trap to ensure cleanup happens even on error
+trap "cd '${OLDPWD}'; rm -rf '${TEMP_DIR}'" EXIT
 
 echo "Copying files to temporary directory..."
 mkdir -p "${ADDON_DIR}"
 
 # Copy all necessary files
-cp -r addon.xml addon.py resources LICENSE README.md "${ADDON_DIR}/"
+if ! cp -r addon.xml addon.py resources LICENSE README.md "${ADDON_DIR}/"; then
+    echo "Error: Failed to copy files."
+    exit 1
+fi
 
 # Remove any unwanted files
 find "${ADDON_DIR}" -name "*.pyc" -delete
@@ -33,17 +57,23 @@ find "${ADDON_DIR}" -name ".DS_Store" -delete
 # Create the zip file
 echo "Creating ZIP package..."
 cd "${TEMP_DIR}"
-zip -r "${PACKAGE_NAME}" "${ADDON_ID}" -x "*.git*" -x "*.DS_Store" -x "*__pycache__*"
+
+if ! zip -r "${PACKAGE_NAME}" "${ADDON_ID}" -x "*.git*" -x "*.DS_Store" -x "*__pycache__*"; then
+    echo "Error: Failed to create ZIP package."
+    exit 1
+fi
 
 # Move the package to the original directory
-mv "${PACKAGE_NAME}" "${OLDPWD}/"
+if ! mv "${PACKAGE_NAME}" "${OLDPWD}/"; then
+    echo "Error: Failed to move package to destination."
+    exit 1
+fi
 
-# Clean up
+# Return to original directory (cleanup will happen via trap)
 cd "${OLDPWD}"
-rm -rf "${TEMP_DIR}"
 
 echo ""
-echo "Package created successfully: ${PACKAGE_NAME}"
+echo "✓ Package created successfully: ${PACKAGE_NAME}"
 echo ""
 echo "Installation instructions:"
 echo "1. Copy ${PACKAGE_NAME} to your Kodi device"
