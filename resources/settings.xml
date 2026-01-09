@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="General">
+        <setting id="jitsi_server" type="text" label="Jitsi Server URL" default="https://meet.jit.si"/>
+        <setting id="display_name" type="text" label="Display Name" default="Kodi User"/>
+    </category>
+    <category label="Meeting Options">
+        <setting id="start_audio_muted" type="bool" label="Start with Audio Muted" default="false"/>
+        <setting id="start_video_muted" type="bool" label="Start with Video Muted" default="false"/>
+    </category>
+</settings>

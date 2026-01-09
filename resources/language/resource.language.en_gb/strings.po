@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+
+msgctxt "#30000"
+msgid "Jitsi Meet"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Join Room"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Join by URL"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Recent Rooms"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Settings"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Enter Room Name"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Enter Jitsi Meet URL"
+msgstr ""
